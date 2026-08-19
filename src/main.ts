@@ -1,9 +1,7 @@
 import express from 'express'
 
-import { AppDataSource } from './database/data-source'
-import { alunoRoutes } from './routes/aluno.routes'
-import { aulaAgendadaRoutes } from './routes/aula-agendada.routes'
-import { instrutorRoutes } from './routes/instrutor.routes'
+import { AppDataSource } from './@common/platform/database/typeorm/typeorm'
+import { rootRouter } from './@common/platform/express/routers/root.router'
 
 async function iniciar() {
   await AppDataSource.initialize()
@@ -11,10 +9,7 @@ async function iniciar() {
 
   const app = express()
   app.use(express.json())
-
-  app.use('/alunos', alunoRoutes)
-  app.use('/instrutores', instrutorRoutes)
-  app.use('/aulas-agendadas', aulaAgendadaRoutes)
+  app.use(rootRouter)
 
   const PORTA = 3000
   app.listen(PORTA, () => {
