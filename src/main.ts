@@ -1,20 +1,11 @@
-import express from 'express'
+import { NestFactory } from '@nestjs/core'
 
-import { AppDataSource } from './@common/platform/database/typeorm/typeorm'
-import { rootRouter } from './@common/platform/express/routers/root.router'
+import { AppModule } from './app.module'
 
-async function iniciar() {
-  await AppDataSource.initialize()
-  console.log('Conectado ao banco de dados com sucesso!')
-
-  const app = express()
-  app.use(express.json())
-  app.use(rootRouter)
-
-  const PORTA = 3000
-  app.listen(PORTA, () => {
-    console.log(`Servidor rodando em http://localhost:${String(PORTA)}`)
-  })
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule)
+  await app.listen(3000)
+  console.log('Servidor rodando em http://localhost:3000')
 }
 
-void iniciar()
+void bootstrap()
