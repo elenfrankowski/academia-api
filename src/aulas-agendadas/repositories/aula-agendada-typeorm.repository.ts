@@ -1,15 +1,19 @@
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { Aluno } from '../../@common/entities/aluno.entity'
 import { Instrutor } from '../../@common/entities/instrutor.entity'
-import { AppDataSource } from '../../@common/platform/database/typeorm/typeorm'
 import { AulaAgendada } from '../aula-agendada.entity'
 import { AulaAgendadaRepository } from './aula-agendada.repository'
 
+@Injectable()
 export class AulaAgendadaTypeormRepository implements AulaAgendadaRepository {
-  private readonly repository: Repository<AulaAgendada> = AppDataSource.getRepository(AulaAgendada)
-  private readonly alunoRepository: Repository<Aluno> = AppDataSource.getRepository(Aluno)
-  private readonly instrutorRepository: Repository<Instrutor> = AppDataSource.getRepository(Instrutor)
+  constructor(
+    @InjectRepository(AulaAgendada) private readonly repository: Repository<AulaAgendada>,
+    @InjectRepository(Aluno) private readonly alunoRepository: Repository<Aluno>,
+    @InjectRepository(Instrutor) private readonly instrutorRepository: Repository<Instrutor>
+  ) {}
 
   async criar(dataHora: Date, alunoId: number, instrutorId: number): Promise<AulaAgendada> {
     const aluno = await this.alunoRepository.findOneBy({ id: alunoId })
