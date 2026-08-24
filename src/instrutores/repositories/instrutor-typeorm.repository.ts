@@ -1,11 +1,13 @@
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { Instrutor } from '../../@common/entities/instrutor.entity'
-import { AppDataSource } from '../../@common/platform/database/typeorm/typeorm'
 import { InstrutorRepository } from './instrutor.repository'
 
+@Injectable()
 export class InstrutorTypeormRepository implements InstrutorRepository {
-  private readonly repository: Repository<Instrutor> = AppDataSource.getRepository(Instrutor)
+  constructor(@InjectRepository(Instrutor) private readonly repository: Repository<Instrutor>) {}
 
   async criar(nome: string, especialidade: string, registro: string): Promise<Instrutor> {
     const novoInstrutor = this.repository.create({ nome, especialidade, registro })

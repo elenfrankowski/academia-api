@@ -1,11 +1,13 @@
+import { Injectable } from '@nestjs/common'
+import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { Aluno } from '../../@common/entities/aluno.entity'
-import { AppDataSource } from '../../@common/platform/database/typeorm/typeorm'
 import { AlunoRepository } from './aluno.repository'
 
+@Injectable()
 export class AlunoTypeormRepository implements AlunoRepository {
-  private readonly repository: Repository<Aluno> = AppDataSource.getRepository(Aluno)
+  constructor(@InjectRepository(Aluno) private readonly repository: Repository<Aluno>) {}
 
   async criar(nome: string, plano: string): Promise<Aluno> {
     const novoAluno = this.repository.create({ nome, plano })

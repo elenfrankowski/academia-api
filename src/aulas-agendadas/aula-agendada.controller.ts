@@ -1,38 +1,34 @@
-import { Request, Response } from 'express'
+import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common'
 
-import { AulaAgendadaTypeormRepository } from './repositories/aula-agendada-typeorm.repository'
+import { CriarAulaDto } from './dtos/criar-aula.dto'
 import { CriarAulaUc } from './usecases/criar-aula.uc'
 import { GetAulaUc } from './usecases/get-aula.uc'
 import { ListarAulasUc } from './usecases/listar-aulas.uc'
 
-const repository = new AulaAgendadaTypeormRepository()
-const criarAulaUc = new CriarAulaUc(repository)
-const getAulaUc = new GetAulaUc(repository)
-const listarAulasUc = new ListarAulasUc(repository)
-
+@Controller('aulas-agendadas')
 export class AulaAgendadaController {
-  async criar(req: Request, res: Response): Promise<void> {
-    try {
-      const aula = await criarAulaUc.executar(req.body)
-      res.status(201).json(aula)
-    } catch (error) {
-      const mensagem = error instanceof Error ? error.message : 'Erro desconhecido.'
-      res.status(400).json({ mensagem })
-    }
+  constructor(
+    private readonly criarAulaUc: CriarAulaUc,
+    private readonly getAulaUc: GetAulaUc,
+    private readonly listarAulasUc: ListarAulasUc
+  ) {}
+
+  @Post()
+  async criar(@Body() dto: CriarAulaDto) {
+    return this.criarAulaUc.executar(dto)
   }
 
-  async buscarPorId(req: Request, res: Response): Promise<void> {
-    try {
-      const aula = await getAulaUc.executar(Number(req.params.id))
-      res.status(200).json(aula)
-    } catch (error) {
-      const mensagem = error instanceof Error ? error.message : 'Erro desconhecido.'
-      res.status(404).json({ mensagem })
-    }
+  @Get()
+  async listar() {
+    return this.listarAulasUc.executar()
   }
 
-  async listar(_req: Request, res: Response): Promise<void> {
-    const aulas = await listarAulasUc.executar()
-    res.status(200).json(aulas)
+  @Get(':id')
+  async buscarPorId(@Param('id') id: string) {
+    try {
+      return await this.getAulaUc.executar(Number(id))
+    } catch {
+      throw new NotFoundException('Aula agendada não encontrada.')
+    }
   }
 }

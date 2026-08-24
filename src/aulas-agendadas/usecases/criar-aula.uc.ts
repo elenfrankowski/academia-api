@@ -1,10 +1,13 @@
+import { Inject, Injectable } from '@nestjs/common'
+
 import { ehDataValida, ehNumeroValido } from '../../@common/platform/utils/validator.utils'
 import { AulaAgendada } from '../aula-agendada.entity'
 import { CriarAulaDto } from '../dtos/criar-aula.dto'
 import { AulaAgendadaRepository } from '../repositories/aula-agendada.repository'
 
+@Injectable()
 export class CriarAulaUc {
-  constructor(private readonly repository: AulaAgendadaRepository) {}
+  constructor(@Inject('AulaAgendadaRepository') private readonly repository: AulaAgendadaRepository) {}
 
   async executar(dto: CriarAulaDto): Promise<AulaAgendada> {
     if (!ehDataValida(dto.dataHora)) {
