@@ -1,10 +1,12 @@
-import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, NotFoundException, Param, Post, UseGuards } from '@nestjs/common'
 
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { CriarAlunoDto } from './dtos/criar-aluno.dto'
 import { CriarAlunoUc } from './usecases/criar-aluno.uc'
 import { GetAlunoUc } from './usecases/get-aluno.uc'
 import { ListarAlunosUc } from './usecases/listar-alunos.uc'
 
+@UseGuards(JwtAuthGuard)
 @Controller('alunos')
 export class AlunoController {
   constructor(
