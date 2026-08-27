@@ -1,10 +1,12 @@
-import { Body, Controller, Get, NotFoundException, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, NotFoundException, Param, Post, UseGuards } from '@nestjs/common'
 
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
 import { CriarAulaDto } from './dtos/criar-aula.dto'
 import { CriarAulaUc } from './usecases/criar-aula.uc'
 import { GetAulaUc } from './usecases/get-aula.uc'
 import { ListarAulasUc } from './usecases/listar-aulas.uc'
 
+@UseGuards(JwtAuthGuard)
 @Controller('aulas-agendadas')
 export class AulaAgendadaController {
   constructor(
