@@ -28,7 +28,11 @@ export class LoginUc {
       throw new UnauthorizedException('Credenciais inválidas.')
     }
 
-    const payload = { sub: usuario.id, email: usuario.email }
+    const payload = {
+      sub: usuario.id,
+      email: usuario.email,
+      iss: process.env.JWT_ISSUER ?? 'academia-api'
+    }
     const accessToken = await this.jwtService.signAsync(payload)
     return { accessToken }
   }
