@@ -1,6 +1,7 @@
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
-import { AulaAgendada } from './AulaAgendada'
+import { Aluno } from './aluno.entity'
+import { AulaAgendada } from '../../aulas-agendadas/aula-agendada.entity'
 
 @Entity('instrutor')
 export class Instrutor {
@@ -15,6 +16,9 @@ export class Instrutor {
 
   @Column({ type: 'varchar', length: 30, unique: true })
   registro!: string
+
+  @OneToMany(() => Aluno, (aluno) => aluno.instrutor)
+  alunos!: Aluno[]
 
   @OneToMany(() => AulaAgendada, (aula) => aula.instrutor)
   aulas!: AulaAgendada[]

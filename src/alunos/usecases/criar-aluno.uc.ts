@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common'
 
-import { ehTextoValido } from '../../@common/platform/utils/validator.utils'
 import { Aluno } from '../../@common/entities/aluno.entity'
+import { ehNumeroValido, ehTextoValido } from '../../@common/platform/utils/validator.utils'
 import { CriarAlunoDto } from '../dtos/criar-aluno.dto'
 import { AlunoRepository } from '../repositories/aluno.repository'
 
@@ -13,6 +13,9 @@ export class CriarAlunoUc {
     if (!ehTextoValido(dto.nome) || !ehTextoValido(dto.plano)) {
       throw new Error('Os campos nome e plano são obrigatórios.')
     }
-    return this.repository.criar(dto.nome, dto.plano)
+    if (!ehNumeroValido(dto.instrutorId)) {
+      throw new Error('O campo instrutorId é obrigatório e deve ser válido.')
+    }
+    return this.repository.criar(dto.nome, dto.plano, dto.instrutorId)
   }
 }

@@ -1,10 +1,24 @@
-import { Body, Controller, Get, NotFoundException, Param, Post, UseGuards } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  HttpCode,
+  NotFoundException,
+  Param,
+  Post,
+  Put,
+  UseGuards
+} from '@nestjs/common'
 
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
+import { AtualizarAlunoDto } from './dtos/atualizar-aluno.dto'
 import { CriarAlunoDto } from './dtos/criar-aluno.dto'
+import { AtualizarAlunoUc } from './usecases/atualizar-aluno.uc'
 import { CriarAlunoUc } from './usecases/criar-aluno.uc'
 import { GetAlunoUc } from './usecases/get-aluno.uc'
 import { ListarAlunosUc } from './usecases/listar-alunos.uc'
+import { RemoverAlunoUc } from './usecases/remover-aluno.uc'
 
 @UseGuards(JwtAuthGuard)
 @Controller('alunos')
@@ -12,7 +26,9 @@ export class AlunoController {
   constructor(
     private readonly criarAlunoUc: CriarAlunoUc,
     private readonly getAlunoUc: GetAlunoUc,
-    private readonly listarAlunosUc: ListarAlunosUc
+    private readonly listarAlunosUc: ListarAlunosUc,
+    private readonly atualizarAlunoUc: AtualizarAlunoUc,
+    private readonly removerAlunoUc: RemoverAlunoUc
   ) {}
 
   @Post()
@@ -32,5 +48,16 @@ export class AlunoController {
       throw new NotFoundException('Aluno não encontrado.')
     }
     return aluno
+  }
+
+  @Put(':id')
+  async atualizar(@Param('id') id: string, @Body() dto: AtualizarAlunoDto) {
+    return this.atualizarAlunoUc.executar(Number(id), dto)
+  }
+
+  @Delete(':id')
+  @HttpCode(204)
+  async remover(@Param('id') id: string) {
+    await this.removerAlunoUc.executar(Number(id))
   }
 }
