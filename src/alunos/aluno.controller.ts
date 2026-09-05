@@ -11,7 +11,10 @@ import {
   UseGuards
 } from '@nestjs/common'
 
+import { RoleEnum } from '../@common/enums/role.enum'
+import { Roles } from '../auth/decorators/roles.decorator'
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard'
+import { RolesGuard } from '../auth/guards/roles.guard'
 import { AtualizarAlunoDto } from './dtos/atualizar-aluno.dto'
 import { CriarAlunoDto } from './dtos/criar-aluno.dto'
 import { AtualizarAlunoUc } from './usecases/atualizar-aluno.uc'
@@ -56,6 +59,8 @@ export class AlunoController {
   }
 
   @Delete(':id')
+  @UseGuards(RolesGuard)
+  @Roles(RoleEnum.ADMIN)
   @HttpCode(204)
   async remover(@Param('id') id: string) {
     await this.removerAlunoUc.executar(Number(id))

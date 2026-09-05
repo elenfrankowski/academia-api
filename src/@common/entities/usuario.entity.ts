@@ -1,5 +1,7 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
+import { RoleEnum } from '../enums/role.enum'
+
 @Entity('usuario')
 export class Usuario {
   @PrimaryGeneratedColumn()
@@ -13,4 +15,7 @@ export class Usuario {
 
   @Column({ type: 'varchar', length: 255 })
   senhaHash!: string
+
+  @Column({ type: 'enum', enum: RoleEnum, default: RoleEnum.INSTRUTOR })
+  role!: RoleEnum
 }

@@ -10,6 +10,8 @@ import { AlunosModule } from './alunos/alunos.module'
 import { AulaAgendada } from './aulas-agendadas/aula-agendada.entity'
 import { AulasAgendadasModule } from './aulas-agendadas/aulas-agendadas.module'
 import { AuthModule } from './auth/auth.module'
+import { Especialidade } from './especialidades/especialidade.entity'
+import { EspecialidadesModule } from './especialidades/especialidades.module'
 import { InstrutoresModule } from './instrutores/instrutores.module'
 
 @Module({
@@ -25,12 +27,13 @@ import { InstrutoresModule } from './instrutores/instrutores.module'
       synchronize: true,
       logging: true,
       namingStrategy: new SnakeCaseNamingPattern(),
-      entities: [Aluno, Instrutor, AulaAgendada, Usuario]
+      entities: [Aluno, Instrutor, AulaAgendada, Usuario, Especialidade]
     }),
     AlunosModule,
     InstrutoresModule,
     AulasAgendadasModule,
-    AuthModule
+    AuthModule,
+    EspecialidadesModule
   ]
 })
 export class AppModule {}

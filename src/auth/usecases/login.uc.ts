@@ -31,6 +31,7 @@ export class LoginUc {
     const payload = {
       sub: usuario.id,
       email: usuario.email,
+      role: usuario.role,
       iss: process.env.JWT_ISSUER ?? 'academia-api'
     }
     const accessToken = await this.jwtService.signAsync(payload)

@@ -3,14 +3,15 @@ import { InjectRepository } from '@nestjs/typeorm'
 import { Repository } from 'typeorm'
 
 import { Usuario } from '../../@common/entities/usuario.entity'
+import { RoleEnum } from '../../@common/enums/role.enum'
 import { UsuarioRepository } from './usuario.repository'
 
 @Injectable()
 export class UsuarioTypeormRepository implements UsuarioRepository {
   constructor(@InjectRepository(Usuario) private readonly repository: Repository<Usuario>) {}
 
-  async criar(nome: string, email: string, senhaHash: string): Promise<Usuario> {
-    const novoUsuario = this.repository.create({ nome, email, senhaHash })
+  async criar(nome: string, email: string, senhaHash: string, role: RoleEnum): Promise<Usuario> {
+    const novoUsuario = this.repository.create({ nome, email, senhaHash, role })
     return this.repository.save(novoUsuario)
   }
 

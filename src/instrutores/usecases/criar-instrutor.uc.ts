@@ -13,6 +13,6 @@ export class CriarInstrutorUc {
     if (!ehTextoValido(dto.nome) || !ehTextoValido(dto.especialidade) || !ehTextoValido(dto.registro)) {
       throw new Error('Os campos nome, especialidade e registro são obrigatórios.')
     }
-    return this.repository.criar(dto.nome, dto.especialidade, dto.registro)
+    return this.repository.criar(dto.nome, dto.especialidade, dto.registro, dto.especialidadeIds)
   }
 }
