@@ -1,8 +1,9 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 
-import { ehTextoValido } from '../../@common/platform/utils/validator.utils'
 import { Usuario } from '../../@common/entities/usuario.entity'
+import { RoleEnum } from '../../@common/enums/role.enum'
+import { ehTextoValido } from '../../@common/platform/utils/validator.utils'
 import { RegistrarDto } from '../dtos/registrar.dto'
 import { UsuarioRepository } from '../repositories/usuario.repository'
 
@@ -22,8 +23,9 @@ export class RegistrarUc {
       throw new ConflictException('Já existe um usuário cadastrado com esse e-mail.')
     }
 
+    const role = dto.role ?? RoleEnum.INSTRUTOR
     const senhaHash = await bcrypt.hash(dto.senha, SALT_ROUNDS)
-    const usuario = await this.repository.criar(dto.nome, dto.email, senhaHash)
+    const usuario = await this.repository.criar(dto.nome, dto.email, senhaHash, role)
 
     const { senhaHash: _senhaHash, ...usuarioSemSenha } = usuario
     return usuarioSemSenha

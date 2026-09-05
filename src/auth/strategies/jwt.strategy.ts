@@ -2,9 +2,12 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { ExtractJwt, Strategy } from 'passport-jwt'
 
+import { RoleEnum } from '../../@common/enums/role.enum'
+
 interface JwtPayload {
   sub: number
   email: string
+  role: RoleEnum
   iss: string
 }
 
@@ -23,6 +26,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     if (payload.iss !== issuerEsperado) {
       throw new UnauthorizedException('Emissor do token inválido.')
     }
-    return { userId: payload.sub, email: payload.email }
+    return { userId: payload.sub, email: payload.email, role: payload.role }
   }
 }

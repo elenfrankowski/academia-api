@@ -4,6 +4,7 @@ import { Repository } from 'typeorm'
 
 import { Aluno } from '../../@common/entities/aluno.entity'
 import { Instrutor } from '../../@common/entities/instrutor.entity'
+import { PlanoEnum } from '../../@common/enums/plano.enum'
 import { AtualizarAlunoDto } from '../dtos/atualizar-aluno.dto'
 import { AlunoRepository } from './aluno.repository'
 
@@ -14,7 +15,7 @@ export class AlunoTypeormRepository implements AlunoRepository {
     @InjectRepository(Instrutor) private readonly instrutorRepository: Repository<Instrutor>
   ) {}
 
-  async criar(nome: string, plano: string, instrutorId: number): Promise<Aluno> {
+  async criar(nome: string, plano: PlanoEnum, instrutorId: number): Promise<Aluno> {
     const instrutor = await this.instrutorRepository.findOneBy({ id: instrutorId })
     if (!instrutor) {
       throw new NotFoundException('Instrutor informado não existe.')

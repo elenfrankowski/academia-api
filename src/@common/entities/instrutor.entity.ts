@@ -1,7 +1,8 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
 
-import { Aluno } from './aluno.entity'
 import { AulaAgendada } from '../../aulas-agendadas/aula-agendada.entity'
+import { Especialidade } from '../../especialidades/especialidade.entity'
+import { Aluno } from './aluno.entity'
 
 @Entity('instrutor')
 export class Instrutor {
@@ -16,6 +17,14 @@ export class Instrutor {
 
   @Column({ type: 'varchar', length: 30, unique: true })
   registro!: string
+
+  @ManyToMany(() => Especialidade, (especialidade) => especialidade.instrutores)
+  @JoinTable({
+    name: 'instrutor_especialidade',
+    joinColumn: { name: 'instrutor_id' },
+    inverseJoinColumn: { name: 'especialidade_id' }
+  })
+  especialidades!: Especialidade[]
 
   @OneToMany(() => Aluno, (aluno) => aluno.instrutor)
   alunos!: Aluno[]
